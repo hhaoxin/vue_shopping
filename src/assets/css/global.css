@@ -1,0 +1,16 @@
+/* 全局样式 */
+html, body, #app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+/* 面包屑 */
+.el-breadcrumb {
+    margin-bottom: 15px;
+    font-size: 13px;
+}
+/* 表单 */
+.el-table {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
