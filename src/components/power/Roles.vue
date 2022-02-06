@@ -12,7 +12,7 @@
       <!-- 添加角色--按钮 -->
       <el-row>
         <el-col>
-          <el-button type="primary">添加角色</el-button>
+          <el-button type="primary" @click="addDialogVisible = true">添加角色</el-button>
         </el-col>
       </el-row>
       <!-- 角色列表 -->
@@ -63,6 +63,22 @@
         </el-table-column>
       </el-table>
     </el-card>
+
+    <!-- 添加角色 -->
+    <el-dialog title="添加角色" :visible.sync="addDialogVisible" @close="addDislogClosed">
+      <el-form :model="addRolesForm" :rules="addFormRules" ref="addRolesForm" label-width="100px">
+        <el-form-item label="角色名称" prop="roleName">
+          <el-input v-model="addRolesForm.roleName"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述" prop="roleDesc">
+          <el-input v-model="addRolesForm.roleDesc"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addRolesUser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -71,7 +87,18 @@ export default {
   data() {
     return {
       // 所有角色列表
-      rolesList: []
+      rolesList: [],
+      // 添加角色内容：显示/隐藏
+      addDialogVisible: false,
+      // 添加角色
+      addRolesForm: {
+        roleName: '',
+        roleDesc: ''
+      },
+      addFormRules: {
+        roleName: { required: true, message: '角色名称不能为空', trigger: 'blur' },
+        roleDesc: { required: true, message: '角色描述不能为空', trigger: 'blur' }
+      }
     }
   },
   created() {
@@ -85,6 +112,23 @@ export default {
       }
       this.rolesList = res.data
       this.$message.success('获取成功!')
+    },
+    // 添加角色
+    addRolesUser() {
+      this.$refs.addRolesForm.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.post('roles', this.addRolesForm)
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加角色失败!')
+        }
+        this.$message.success('添加角色成功!')
+        this.getRolesList()
+        this.addDialogVisible = false
+      })
+    },
+    // 清空添加角色对话框
+    addDislogClosed() {
+      this.$refs.addRolesForm.resetFields()
     }
   }
 }

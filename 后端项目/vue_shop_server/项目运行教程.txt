@@ -1,0 +1,2 @@
+直接打开到vue_shop_server目录，按“shift”键+右键鼠标，选择powershell选项，
+输入命令：node .\app.js回车，成功运行即可
